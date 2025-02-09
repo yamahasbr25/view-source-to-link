@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Link Extractor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+        }
+        button {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #output {
+            margin-top: 20px;
+            text-align: left;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .image-link {
+            display: block;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <h2>Image Link Extractor</h2>
+    <textarea id="inputCode" placeholder="Masukkan kode view-source di sini..."></textarea>
+    <br>
+    <button id="convertBtn">Convert</button>
+    <button id="copyBtn">Copy Hasil</button>
+    <div id="output"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("convertBtn").addEventListener("click", extractLinks);
+            document.getElementById("copyBtn").addEventListener("click", copyToClipboard);
+        });
+
+        function extractLinks() {
+            let inputCode = document.getElementById("inputCode").value;
+            let regex = /https?:\/\/(?!www\.bing\.com|r\.bing\.com)[^\s"',]+\.(?:jpg|jpeg|png|bmp|webp|svg)/gi;
+            let outputDiv = document.getElementById("output");
+            let result = [];
+            let match;
+            
+            while ((match = regex.exec(inputCode)) !== null) {
+                result.push(match[0]);
+            }
+            
+            outputDiv.innerHTML = result.length > 0 ?
+                result.map(link => `<a class="image-link" href="${link}" target="_blank">${link}</a>`).join("<br>") :
+                "<p>Tidak ada link gambar ditemukan.</p>";
+        }
+
+        function copyToClipboard() {
+            let links = document.querySelectorAll(".image-link");
+            let textToCopy = Array.from(links).map(link => link.href).join("\n");
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert("Hasil telah disalin ke clipboard!");
+            }).catch(err => {
+                alert("Gagal menyalin: " + err);
+            });
+        }
+    </script>
+</body>
+</html>
