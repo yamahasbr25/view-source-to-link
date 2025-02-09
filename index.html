@@ -26,9 +26,10 @@
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
+            white-space: pre-line;
         }
         .image-link {
-            display: block;
+            display: inline;
             word-wrap: break-word;
         }
     </style>
@@ -58,14 +59,11 @@
                 result.push(match[0]);
             }
             
-            outputDiv.innerHTML = result.length > 0 ?
-                result.map(link => `<a class="image-link" href="${link}" target="_blank">${link}</a>`).join("<br>") :
-                "<p>Tidak ada link gambar ditemukan.</p>";
+            outputDiv.textContent = result.length > 0 ? result.join("\n") : "Tidak ada link gambar ditemukan.";
         }
 
         function copyToClipboard() {
-            let links = document.querySelectorAll(".image-link");
-            let textToCopy = Array.from(links).map(link => link.href).join("\n");
+            let textToCopy = document.getElementById("output").textContent;
             
             navigator.clipboard.writeText(textToCopy).then(() => {
                 alert("Hasil telah disalin ke clipboard!");
